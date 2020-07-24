@@ -1,3 +1,3 @@
 # Kerbal.me
 
-> Kerbal avatar generator site
+> Kerbal avatar generator

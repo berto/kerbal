@@ -6,7 +6,7 @@ const baseUrl = 'https://s3-us-west-2.amazonaws.com/kerbal.me'
 let currentKerbal = []
 
 const initialItems = {
-  face: 'face',
+  color: 'face',
   extras: 'glare',
   hair: 'hair',
 }

@@ -1,0 +1,27 @@
+body {
+  margin-top: 10px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+#save {
+  float: right;
+}
+#kerbal {
+  position: relative;
+  width: 90%;
+}
+#kerbal img {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.footer {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+  line-height: normal;
+  text-align: right;
+}

@@ -8,8 +8,62 @@
     <title>Kerbal.me</title>
   </head>
   <body>
-    <main class="grid-container">
+    <header class="grid-container">
       <h1>Kerbal.me</h1>
+      <section>
+        <button type="button" class="button secondary">Reset</button>
+      </section>
+    </header>
+    <main class="grid-container grid-x">
+      <div class="cell small-7 large-8">
+        <div id="kerbal"></div>
+      </div>
+      <div class="cell small-5 large-4">
+        <ul class="accordion" data-accordion>
+          <li class="accordion-item is-active" data-accordion-item>
+            <a href="#" class="accordion-title">Face</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of faces</p>
+            </div>
+          </li>
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Eyes</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of eyes</p>
+            </div>
+          </li>
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Mouth</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of mouths</p>
+            </div>
+          </li>
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Hair</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of hair styles</p>
+            </div>
+          </li>
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Facial Hair</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of facial hair</p>
+            </div>
+          </li>
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Accessories and Extras</a>
+            <div class="accordion-content" data-tab-content>
+              <p>List of accessories</p>
+            </div>
+          </li>
+        </ul>
+        <button id="save" type="button" class="success button">Save and Continue...</button>
+        <hr />
+        <p class="footer">Built by <a target="_blank" href="https://berto.github.io">berto</a></p>
+        <p class="footer">
+          <a target="_blank" href="https://github.com/berto/kerbal.me">View On Github</a>
+        </p>
+      </div>
     </main>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/foundation.js"></script>

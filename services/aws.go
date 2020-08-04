@@ -97,7 +97,7 @@ func (s *Service) DownloadBytes(keyName string) ([]byte, error) {
 // List lists the s3 objects at a bucket and prefix
 func (s *Service) List() ([]*S3Object, error) {
 	client := s3.New(s.Sess)
-	data, err := client.ListObjects(&s3.ListObjectsInput{
+	data, err := client.ListObjectsV2(&s3.ListObjectsV2Input{
 		Bucket: aws.String(s.Bucket),
 	})
 	if err != nil {

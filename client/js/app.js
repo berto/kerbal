@@ -5,20 +5,30 @@ const baseUrl = 'https://s3-us-west-2.amazonaws.com/kerbal.me'
 
 let currentKerbal = []
 
-const initialItems = {
-  color: 'face',
-  extras: 'glare',
+const items = {
+  suit: 'helmet',
+  color: 'green',
+  mouth: 'smile',
   hair: 'hair',
+  eyes: 'eyes',
 }
 
-const loadInitialKerbal = () => {
-  Object.keys(initialItems).forEach((folder) => {
-    currentKerbal.push(`${baseUrl}/${folder}/${initialItems[folder]}.png`)
+const loadKerbal = () => {
+  currentKerbal = []
+  let suitName
+  Object.keys(items).forEach((folder) => {
+    let extra = ''
+    if (folder === 'suit') {
+      extra = '-back'
+      suitName = items[folder]
+    }
+    currentKerbal.push(`${baseUrl}/${folder}/${items[folder]}${extra}.png`)
   })
+  currentKerbal.push(`${baseUrl}/suit/${suitName}-front-glare.png`)
 }
 
 const displayKerbal = () => {
-  console.log(currentKerbal)
+  loadKerbal()
   $kerbalContainer.empty()
   currentKerbal.forEach((link) => {
     const imageHTML = `<img src="${link}" />`
@@ -28,7 +38,6 @@ const displayKerbal = () => {
 }
 
 const init = () => {
-  loadInitialKerbal()
   displayKerbal()
 }
 

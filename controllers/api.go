@@ -31,14 +31,17 @@ func GetItems(ctx context.Context) (Items, error) {
 func NewItems(objects []*services.S3Object) Items {
 	items := map[string][]Item{}
 	for _, obj := range objects {
+		splitName := strings.Split(obj.Name, "/")
+		folder := splitName[0]
+		if folder == "kerbals" {
+			continue
+		}
 		if obj.Size == 0 {
 			if _, ok := items[obj.Name]; !ok {
-				items[strings.Split(obj.Name, "/")[0]] = []Item{}
+				items[folder] = []Item{}
 			}
 			continue
 		}
-		splitName := strings.Split(obj.Name, "/")
-		folder := splitName[0]
 		items[folder] = append(items[folder], Item(splitName[1]))
 	}
 	return items

@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func apiHandler(c *gin.Context) {
+func getItems(c *gin.Context) {
 	items, err := controllers.GetItems(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to list items: %s", err.Error()))

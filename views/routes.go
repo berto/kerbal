@@ -13,10 +13,10 @@ func Home(c *gin.Context) {
 
 // KerbalRoutes manage kerbals
 func KerbalRoutes(router *gin.RouterGroup) {
-	router.GET("/", kerbalHandler)
+	router.POST("/", createKerbal)
 }
 
 // APIRoutes public interface
 func APIRoutes(router *gin.RouterGroup) {
-	router.GET("/", apiHandler)
+	router.GET("/items", getItems)
 }

@@ -38,15 +38,16 @@ header h1 {
 .image-card {
   width: 75px;
   height: 75px;
-  border: solid 1px lightgray;
 }
 .image-card:hover {
-  border: solid 1px lightgreen;
+  border: solid 1px lightblue;
   cursor: pointer;
+  padding: 1px;
 }
 .image-card.active {
-  background: lightblue;
+  border: solid 1px #70d780;
 }
 .none {
+  border: dotted 1px #767676;
   display: inline-block;
 }

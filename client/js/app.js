@@ -6,11 +6,13 @@ const endpoints = {
   kerbal: '/kerbal/',
 }
 const suitFolder = 'suit'
+const previewKey = '-preview'
+const frontKey = '-front'
 
 let currentKerbal = {}
 
 const initialItems = {
-  suit: 'helmet-back.png',
+  suit: 'helmet.png',
   color: 'green.png',
   mouth: 'smile.png',
   hair: 'hair.png',
@@ -20,18 +22,27 @@ const initialItems = {
   extras: '',
 }
 
+const removeKey = (word, key) => {
+  const index = word.indexOf(key)
+  if (index >= 0) {
+    return word.slice(0, index) + word.slice(key.length + index, word.length)
+  }
+  return word
+}
+
 const updateKerbal = (folder, item) => {
   const box = $(`#kerbal-${folder}`)
   box.empty()
   if (item) {
+    item = removeKey(item, previewKey)
     const imageHTML = `<img src="${baseUrl}/${folder}/${item}" />`
     box.append(imageHTML)
-  }
-  if (folder === suitFolder) {
-    const helmetFront = $('#kerbal-suit-front')
-    helmetFront.empty()
-    const imageHTML = `<img src="${baseUrl}/${folder}/helmet-front.png" />`
-    helmetFront.append(imageHTML)
+    if (folder === suitFolder) {
+      const helmetFront = $('#kerbal-suit-front')
+      helmetFront.empty()
+      item = removeKey(item, '.png')
+      helmetFront.append(`<img src="${baseUrl}/${folder}/${item}${frontKey}.png" />`)
+    }
   }
 }
 
@@ -58,11 +69,11 @@ const generateCard = (folder, item) => {
   const img = $('<img />')
   img.addClass('image-card')
   img.attr('src', `${baseUrl}/${folder}/${item}`)
-  img.attr('id', item)
+  img.attr('id', removeKey(item, previewKey))
   img.click(function () {
     removeActive(folder)
     img.addClass('active')
-    currentKerbal[folder] = item
+    currentKerbal[folder] = removeKey(item, previewKey)
     updateKerbal(folder, item)
   })
   return img
@@ -78,8 +89,7 @@ const displayImages = () => {
           continue
         }
         data[folder].forEach((item) => {
-          if (folder !== suitFolder || item.indexOf('front') === -1)
-            box.append(generateCard(folder, item))
+          if (item.indexOf('preview') > 0) box.append(generateCard(folder, item))
         })
       }
     })

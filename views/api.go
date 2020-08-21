@@ -11,7 +11,7 @@ import (
 func getItems(c *gin.Context) {
 	items, err := controllers.GetItems(c)
 	if err != nil {
-		responses.NewServerError(c, err)
+		responses.ServerError(c, err)
 		return
 	}
 	c.JSON(http.StatusOK, items)

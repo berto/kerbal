@@ -6,26 +6,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// NewClientError sends client error
-func NewClientError(c *gin.Context, err error) {
+// ClientError sends client error
+func ClientError(c *gin.Context, err error) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"error": err.Error(),
 	})
 	c.Abort()
 }
 
-// NewServerError sends server error
-func NewServerError(c *gin.Context, err error) {
+// ServerError sends server error
+func ServerError(c *gin.Context, err error) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"error": err.Error(),
 	})
 	c.Abort()
 }
 
-// NewOK sends data
-func NewOK(c *gin.Context, err error) {
-	c.JSON(http.StatusBadRequest, gin.H{
-		"data": err.Error(),
+// OK sends data
+func OK(c *gin.Context, data interface{}) {
+	c.JSON(http.StatusOK, gin.H{
+		"data": data,
 	})
 	c.Abort()
 }

@@ -101,13 +101,13 @@ func (s *Service) List() ([]*S3Object, error) {
 	}
 	out := []*S3Object{}
 	for _, obj := range data.Contents {
-		out = append(out, s.NewS3Object(obj))
+		out = append(out, s.NewS3FromObj(obj))
 	}
 	return out, nil
 }
 
-// NewS3Object creates a new s3 object
-func (s *Service) NewS3Object(obj *s3.Object) *S3Object {
+// NewS3FromObj creates a new s3 object
+func (s *Service) NewS3FromObj(obj *s3.Object) *S3Object {
 	return &S3Object{
 		svc:        s,
 		Bucket:     s.Bucket,
@@ -117,6 +117,16 @@ func (s *Service) NewS3Object(obj *s3.Object) *S3Object {
 		Size:       *obj.Size,
 		Tag:        *obj.ETag,
 		Age:        fmt.Sprint(durafmt.ParseShort(time.Since(*obj.LastModified))),
+	}
+}
+
+// NewS3Object from key
+func (s *Service) NewS3Object(keyName string) *S3Object {
+	return &S3Object{
+		svc:    s,
+		Bucket: s.Bucket,
+		Name:   keyName,
+		Date:   time.Now(),
 	}
 }
 

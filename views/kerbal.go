@@ -1,8 +1,6 @@
 package views
 
 import (
-	"net/http"
-
 	"github.com/berto/kerbal/controllers"
 	"github.com/berto/kerbal/responses"
 	"github.com/gin-gonic/gin"
@@ -11,16 +9,17 @@ import (
 func createKerbal(c *gin.Context) {
 	input := controllers.KerbalItems{}
 	if err := c.Bind(&input); err != nil {
-		responses.NewClientError(c, err)
+		responses.ClientError(c, err)
 		return
 	}
 	if err := input.Validate(); err != nil {
-		responses.NewClientError(c, err)
+		responses.ClientError(c, err)
 		return
 	}
-	if err := controllers.CreateKerbal(c, input); err != nil {
-		responses.NewServerError(c, err)
+	id, err := controllers.CreateKerbal(c, input)
+	if err != nil {
+		responses.ServerError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, input)
+	responses.OK(c, id)
 }

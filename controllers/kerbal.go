@@ -9,7 +9,6 @@ import (
 	"image/draw"
 	"image/png"
 	"io"
-	"io/ioutil"
 	"log"
 	"sync"
 
@@ -50,25 +49,22 @@ var requiredItems = map[string]bool{
 }
 
 // CreateKerbal takes a list of items and generates avatar
-func CreateKerbal(ctx context.Context, items KerbalItems) error {
+func CreateKerbal(ctx context.Context, items KerbalItems) (string, error) {
 	id := generateID(items)
-	images, err := loadImages(ctx, items)
+	awsService := services.New(ctx)
+	images, err := loadImages(awsService, items)
 	if err != nil {
-		return nil
+		return id, nil
 	}
 	var kerbalBuf bytes.Buffer
 	if err := drawImage(ctx, images, &kerbalBuf); err != nil {
-		return err
+		return id, err
 	}
-	if err := ioutil.WriteFile("./kerbal.png", kerbalBuf.Bytes(), 0644); err != nil {
-		return err
-	}
-	fmt.Println(id)
-	return nil
+	obj := awsService.NewS3Object(fmt.Sprintf("/kerbals/%s.png", id))
+	return id, obj.UploadFromReader(bytes.NewReader(kerbalBuf.Bytes()))
 }
 
-func loadImages(ctx context.Context, items KerbalItems) ([]image.Image, error) {
-	awsService := services.New(ctx)
+func loadImages(awsService *services.Service, items KerbalItems) ([]image.Image, error) {
 	if err := awsService.AWSConnect(); err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to aws: %s")
 	}
@@ -146,5 +142,5 @@ func generateID(items KerbalItems) string {
 		name += fmt.Sprintf("%s:%s", folder, item)
 	}
 	bytes := hash.Sum(nil)
-	return fmt.Sprintf("%x\n", bytes)
+	return fmt.Sprintf("%x", bytes)
 }

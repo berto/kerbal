@@ -16,12 +16,13 @@ func createRouter() *gin.Engine {
 	{
 		router.Use(gin.Recovery())
 		router.Use(gin.Logger())
-		router.LoadHTMLGlob("./client/index.html")
+		router.LoadHTMLGlob("./client/*.html")
 		router.Static("/js", "./client/js")
 		router.Static("/css", "./client/css")
 	}
 	{
 		router.GET("/", views.Home)
+		router.GET("/download", views.Download)
 		views.KerbalRoutes(router.Group("/kerbal"))
 		views.APIRoutes(router.Group("/api"))
 	}

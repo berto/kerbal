@@ -11,6 +11,11 @@ func Home(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
+// Download serves index
+func Download(c *gin.Context) {
+	c.HTML(http.StatusOK, "download.html", nil)
+}
+
 // KerbalRoutes manage kerbals
 func KerbalRoutes(router *gin.RouterGroup) {
 	router.POST("/", createKerbal)

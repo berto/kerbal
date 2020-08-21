@@ -50,3 +50,12 @@ header h1 {
   border: dotted 1px #767676;
   display: inline-block;
 }
+
+.callout {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-width: 500px;
+  top: 5px;
+  right: 5px;
+}

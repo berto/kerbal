@@ -99,7 +99,10 @@ const displayImages = () => {
         })
       }
     })
-    .catch(console.error)
+    .catch((response) => {
+      const message = response.error || 'Failed to load images, please refresh'
+      displayError(message)
+    })
 }
 
 const loadKerbal = () => {
@@ -142,9 +145,25 @@ const activateButtons = () => {
       },
     })
       .then((response) => response.json())
-      .then(console.log)
-      .catch(console.error)
+      .then((response) => {
+        window.location.href = '/download?kerbal=' + response.data
+      })
+      .catch((response) => {
+        const message = response.error || 'Failed to create Kerbal, please try again'
+        displayError(message)
+      })
   })
+}
+
+const displayError = (error) => {
+  const alertBox = $('.callout')
+  const fadeOutTime = 5000
+  alertBox.fadeIn()
+  $('#error-message').text(error)
+  setTimeout(() => {
+    console.log('i')
+    alertBox.fadeOut(1000)
+  }, fadeOutTime)
 }
 
 const init = () => {

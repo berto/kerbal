@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"context"
+	"crypto/sha1"
 	"fmt"
 	"image"
 	"image/draw"
@@ -17,7 +18,7 @@ import (
 )
 
 // KerbalItems is a list of avatar items
-type KerbalItems map[string]interface{}
+type KerbalItems map[string]string
 
 // Validate checks for required items
 func (k KerbalItems) Validate() error {
@@ -50,6 +51,7 @@ var requiredItems = map[string]bool{
 
 // CreateKerbal takes a list of items and generates avatar
 func CreateKerbal(ctx context.Context, items KerbalItems) error {
+	id := generateID(items)
 	images, err := loadImages(ctx, items)
 	if err != nil {
 		return nil
@@ -61,6 +63,7 @@ func CreateKerbal(ctx context.Context, items KerbalItems) error {
 	if err := ioutil.WriteFile("./kerbal.png", kerbalBuf.Bytes(), 0644); err != nil {
 		return err
 	}
+	fmt.Println(id)
 	return nil
 }
 
@@ -131,4 +134,17 @@ func drawImage(ctx context.Context, images []image.Image, w io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+func generateID(items KerbalItems) string {
+	hash := sha1.New()
+	name := ""
+	for folder, item := range items {
+		if item == "" {
+			continue
+		}
+		name += fmt.Sprintf("%s:%s", folder, item)
+	}
+	bytes := hash.Sum(nil)
+	return fmt.Sprintf("%x\n", bytes)
 }

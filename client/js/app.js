@@ -1,10 +1,5 @@
 $(document).foundation()
 
-const baseUrl = 'https://s3-us-west-2.amazonaws.com/kerbal.me'
-const endpoints = {
-  items: '/api/items',
-  kerbal: '/kerbal/',
-}
 const suitFolder = 'suit'
 const previewKey = '-preview'
 const frontKey = '-front'
@@ -133,6 +128,8 @@ const activateButtons = () => {
   const save = $('#save')
   save.removeClass('disabled')
   save.click(() => {
+    save.text('Launching Kerbal...')
+    save.addClass('disabled')
     const body = {
       ...currentKerbal,
       'suit-front': removeKey(currentKerbal.suit, '.png') + frontKey + '.png',
@@ -146,24 +143,15 @@ const activateButtons = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        window.location.href = '/download?kerbal=' + response.data
+        window.location.href = '/download?id=' + response.data
       })
       .catch((response) => {
+        save.removeClass('disabled')
+        save.text('Save and Continue...')
         const message = response.error || 'Failed to create Kerbal, please try again'
         displayError(message)
       })
   })
-}
-
-const displayError = (error) => {
-  const alertBox = $('.callout')
-  const fadeOutTime = 5000
-  alertBox.fadeIn()
-  $('#error-message').text(error)
-  setTimeout(() => {
-    console.log('i')
-    alertBox.fadeOut(1000)
-  }, fadeOutTime)
 }
 
 const init = () => {

@@ -2,8 +2,13 @@
   font-family: 'Corbel';
   src: url('./Corbel.ttf');
 }
+@font-face {
+  font-family: 'Exo2';
+  src: url('./Exo2.ttf');
+}
 body {
   margin-top: 10px;
+  font-family: Exo2, sans-serif;
 }
 header {
   display: flex;
@@ -12,8 +17,11 @@ header {
 }
 header h1 {
   font-family: Corbel, sans-serif;
+  color: #cf321f;
+  cursor: pointer;
 }
-#save {
+#save,
+#download {
   float: right;
 }
 #kerbal {
@@ -50,7 +58,26 @@ header h1 {
   border: dotted 1px #767676;
   display: inline-block;
 }
-
+.loading {
+  font-size: 24px;
+}
+.accordion-title {
+  font-size: 1em;
+}
+.download-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+}
+.download-avatar {
+  height: 500px;
+  max-width: 500px;
+}
+.download-footer {
+  max-width: 500px;
+  width: 100%;
+}
 .callout {
   display: none;
   position: absolute;

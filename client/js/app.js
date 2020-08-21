@@ -32,17 +32,22 @@ const removeKey = (word, key) => {
 
 const updateKerbal = (folder, item) => {
   const box = $(`#kerbal-${folder}`)
-  box.empty()
   if (item) {
     item = removeKey(item, previewKey)
-    const imageHTML = `<img src="${baseUrl}/${folder}/${item}" />`
-    box.append(imageHTML)
+    $(`<img src="${baseUrl}/${folder}/${item}" />`).on('load', function () {
+      box.empty()
+      box.append($(this))
+    })
     if (folder === suitFolder) {
       const helmetFront = $('#kerbal-suit-front')
-      helmetFront.empty()
       item = removeKey(item, '.png')
-      helmetFront.append(`<img src="${baseUrl}/${folder}/${item}${frontKey}.png" />`)
+      $(`<img src="${baseUrl}/${folder}/${item}${frontKey}.png" />`).on('load', function () {
+        helmetFront.empty()
+        helmetFront.append($(this))
+      })
     }
+  } else {
+    box.empty()
   }
 }
 
@@ -71,6 +76,7 @@ const generateCard = (folder, item) => {
   img.attr('src', `${baseUrl}/${folder}/${item}`)
   img.attr('id', removeKey(item, previewKey))
   img.click(function () {
+    if ($(this).hasClass('active')) return
     removeActive(folder)
     img.addClass('active')
     currentKerbal[folder] = removeKey(item, previewKey)

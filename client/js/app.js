@@ -124,9 +124,13 @@ const activateButtons = () => {
   const save = $('#save')
   save.removeClass('disabled')
   save.click(() => {
+    const body = {
+      ...currentKerbal,
+      'suit-front': removeKey(currentKerbal.suit, '.png') + frontKey + '.png',
+    }
     fetch(endpoints.kerbal, {
       method: 'post',
-      body: JSON.stringify(currentKerbal),
+      body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
       },

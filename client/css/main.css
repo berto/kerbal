@@ -42,7 +42,6 @@ header h1 {
 .image-card:hover {
   border: solid 1px lightblue;
   cursor: pointer;
-  padding: 1px;
 }
 .image-card.active {
   border: solid 1px #70d780;

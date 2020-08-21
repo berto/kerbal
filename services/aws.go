@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"image"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -69,8 +69,8 @@ func (s *Service) AWSConnect() error {
 	return nil
 }
 
-// DownloadBytes downloads a key into bytes
-func (s *Service) DownloadBytes(keyName string) ([]byte, error) {
+// DownloadImages downloads images from bucket
+func (s *Service) DownloadImages(keyName string) (image.Image, string, error) {
 	downloader := s3manager.NewDownloader(s.Sess)
 	buffer := &aws.WriteAtBuffer{}
 	path := strings.Join([]string{s.Prefix, keyName}, "/")
@@ -79,7 +79,7 @@ func (s *Service) DownloadBytes(keyName string) ([]byte, error) {
 		Key:    aws.String(path),
 	})
 	if err != nil {
-		return nil, errors.Wrapf(
+		return nil, "", errors.Wrapf(
 			err,
 			"download manager: bucket: %s prefix: %s keyname: %s",
 			s.Bucket,
@@ -87,11 +87,7 @@ func (s *Service) DownloadBytes(keyName string) ([]byte, error) {
 			keyName,
 		)
 	}
-	data, err := ioutil.ReadAll(bytes.NewReader(buffer.Bytes()))
-	if err != nil {
-		return nil, errors.Wrap(err, "reading aws buffer")
-	}
-	return data, nil
+	return image.Decode(bytes.NewReader(buffer.Bytes()))
 }
 
 // List lists the s3 objects at a bucket and prefix

@@ -2,11 +2,27 @@
 
 > Kerbal avatar generator
 
-Kerbal.me is a fan-made website to generate a Kerbal avatar like you! It is in no way affiliated with the KSP team.
+Kerbal.me is a fan-made website, it is in no way affiliated with the KSP team.
+
+## Artwork
+
+The artwork is stored in a AWS S3 account for the app under the following folders:
+
+```
+  /suit
+  /color
+  /eyes
+  /mouth
+  /hair
+  /facial-hair
+  /glasses
+  /extras
+  /kerbals
+```
 
 ## Contributing
 
-![Read Contributing Guideline](./contributing.md)
+[Read Contributing Guideline](./contributing.md)
 
 ## Local Development
 
@@ -25,4 +41,5 @@ If `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` are not provided, it looks for
 To run with docker:
 
 `docker build -t kerbal .`
+
 `docker run -p 3000:3000 -e AWS_ACCESS_KEY_ID=access_key_id -e AWS_SECRET_ACCESS_KEY=secret_access_key kerbal`

@@ -57,15 +57,30 @@ func (s *Service) AWSConnect() error {
 	if profile == "" {
 		profile = "kerbal.me"
 	}
-	conf := aws.NewConfig().WithCredentials(
-		credentials.NewSharedCredentials("", profile),
-	).WithRegion("us-west-2")
+	region := os.Getenv("AWS_REGION")
+	if region == "" {
+		region = "us-west-2"
+	}
+	bucket := os.Getenv("AWS_BUCKET")
+	if bucket == "" {
+		bucket = "kerbal.me"
+	}
+	awsID := os.Getenv("AWS_ACCESS_KEY_ID")
+	awsSecret := os.Getenv("AWS_SECRET_ACCESS_KEY")
+
+	var creds *credentials.Credentials
+	if awsID != "" && awsSecret != "" {
+		creds = credentials.NewStaticCredentials(awsID, awsSecret, "")
+	} else {
+		creds = credentials.NewSharedCredentials("", profile)
+	}
+	conf := aws.NewConfig().WithCredentials(creds).WithRegion(region)
 	sess, err := session.NewSession(conf)
 	if err != nil {
 		return err
 	}
 	s.Sess = sess
-	s.Bucket = profile
+	s.Bucket = bucket
 	return nil
 }
 

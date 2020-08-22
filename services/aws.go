@@ -91,10 +91,11 @@ func (s *Service) DownloadImages(keyName string) (image.Image, string, error) {
 }
 
 // List lists the s3 objects at a bucket and prefix
-func (s *Service) List() ([]*S3Object, error) {
+func (s *Service) List(prefix *string) ([]*S3Object, error) {
 	client := s3.New(s.Sess)
 	data, err := client.ListObjectsV2(&s3.ListObjectsV2Input{
 		Bucket: aws.String(s.Bucket),
+		Prefix: prefix,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "listing s3 objects")

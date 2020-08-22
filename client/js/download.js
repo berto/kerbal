@@ -26,11 +26,12 @@ const displayAvatar = () => {
       displayError('Invalid id: ' + id)
     }
     const box = $('.download-avatar')
-    $(`<img src="${baseUrl}/kerbals/${id}.png" />`)
+    const url = `${baseUrl}/kerbals/${id}.png`
+    $(`<img src="${url}" />`)
       .on('load', function () {
         box.empty()
         box.append($(this))
-        resolve('loaded')
+        resolve(url)
       })
       .on('error', () => {
         $('.loading').text('Kerbal not found :(')
@@ -38,13 +39,24 @@ const displayAvatar = () => {
   })
 }
 
-const enableDownload = () => {
+const downloadImage = (url) => {
+  const link = $('<a />')
+  link.attr('download', 'kerbal')
+  link.attr('href', url)
+  link.attr('id', 'kerbal-link')
+  $('body').append(link)
+  document.querySelector('#kerbal-link').click()
+  link.remove()
+}
+
+const enableDownload = (url) => {
   const download = $('#download')
   download.removeClass('disabled')
   download.click(function () {
-    const button = $(this)
-    button.text('Downloading...')
-    button.addClass('disabled')
+    downloadImage(url)
+    // const button = $(this)
+    // button.text('Downloading...')
+    // button.addClass('disabled')
   })
 }
 

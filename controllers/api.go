@@ -20,7 +20,7 @@ func GetItems(ctx context.Context) (Items, error) {
 	if err := awsService.AWSConnect(); err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to aws: %s")
 	}
-	items, err := awsService.List()
+	items, err := awsService.List(nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to list items: %s")
 	}

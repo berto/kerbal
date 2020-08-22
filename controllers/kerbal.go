@@ -10,6 +10,7 @@ import (
 	"image/png"
 	"io"
 	"log"
+	"strings"
 	"sync"
 
 	"github.com/berto/kerbal/services"
@@ -50,8 +51,18 @@ var requiredItems = map[string]bool{
 
 // CreateKerbal takes a list of items and generates avatar
 func CreateKerbal(ctx context.Context, items KerbalItems) (string, error) {
-	id := generateID(items)
 	awsService := services.New(ctx)
+	if err := awsService.AWSConnect(); err != nil {
+		return "", errors.Wrap(err, "Failed to connect to aws: %s")
+	}
+	id := generateID(items)
+	new, err := isNew(awsService, id)
+	if err != nil {
+		return "", err
+	}
+	if !new {
+		return id, nil
+	}
 	images, err := loadImages(awsService, items)
 	if err != nil {
 		return id, nil
@@ -64,10 +75,30 @@ func CreateKerbal(ctx context.Context, items KerbalItems) (string, error) {
 	return id, obj.UploadFromReader(bytes.NewReader(kerbalBuf.Bytes()))
 }
 
-func loadImages(awsService *services.Service, items KerbalItems) ([]image.Image, error) {
-	if err := awsService.AWSConnect(); err != nil {
-		return nil, errors.Wrap(err, "Failed to connect to aws: %s")
+func isNew(awsService *services.Service, id string) (bool, error) {
+	folder := "kerbals"
+	kerbalObjs, err := awsService.List(&folder)
+	if err != nil {
+		return false, errors.Wrap(err, "Failed to list items: %s")
 	}
+	for _, obj := range kerbalObjs {
+		if getName(obj.Name) == id {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func getName(objName string) string {
+	name := strings.Split(objName, ".")[0]
+	split := strings.Split(name, "/")
+	if len(split) != 2 {
+		return ""
+	}
+	return split[1]
+}
+
+func loadImages(awsService *services.Service, items KerbalItems) ([]image.Image, error) {
 	images := map[string]image.Image{}
 	var wg sync.WaitGroup
 	var mtx sync.Mutex

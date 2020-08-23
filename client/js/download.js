@@ -26,7 +26,7 @@ const displayAvatar = () => {
       displayError('Invalid id: ' + id)
     }
     const box = $('.download-avatar')
-    const url = `${baseUrl}/kerbals/${id}.png`
+    const url = `${awsURL}/kerbals/${id}.png`
     $(`<img src="${url}" />`)
       .on('load', function () {
         box.empty()
@@ -54,9 +54,6 @@ const enableDownload = (url) => {
   download.removeClass('disabled')
   download.click(function () {
     downloadImage(url)
-    // const button = $(this)
-    // button.text('Downloading...')
-    // button.addClass('disabled')
   })
 }
 

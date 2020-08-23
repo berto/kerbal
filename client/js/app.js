@@ -29,14 +29,14 @@ const updateKerbal = (folder, item) => {
   const box = $(`#kerbal-${folder}`)
   if (item) {
     item = removeKey(item, previewKey)
-    $(`<img src="${baseUrl}/${folder}/${item}" />`).on('load', function () {
+    $(`<img src="${awsURL}/${folder}/${item}" />`).on('load', function () {
       box.empty()
       box.append($(this))
     })
     if (folder === suitFolder) {
       const helmetFront = $('#kerbal-suit-front')
       item = removeKey(item, '.png')
-      $(`<img src="${baseUrl}/${folder}/${item}${frontKey}.png" />`).on('load', function () {
+      $(`<img src="${awsURL}/${folder}/${item}${frontKey}.png" />`).on('load', function () {
         helmetFront.empty()
         helmetFront.append($(this))
       })
@@ -68,7 +68,7 @@ const activateNoneCards = () => {
 const generateCard = (folder, item) => {
   const img = $('<img />')
   img.addClass('image-card')
-  img.attr('src', `${baseUrl}/${folder}/${item}`)
+  img.attr('src', `${awsURL}/${folder}/${item}`)
   img.attr('id', removeKey(item, previewKey))
   img.click(function () {
     if ($(this).hasClass('active')) return
@@ -82,7 +82,7 @@ const generateCard = (folder, item) => {
 
 const displayImages = () => {
   return fetch(endpoints.items)
-    .then((response) => response.json())
+    .then(handleResponse)
     .then((data) => {
       for (const folder in data) {
         const box = $(`#${folder}`)
@@ -141,7 +141,7 @@ const activateButtons = () => {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
+      .then(handleResponse)
       .then((response) => {
         window.location.href = '/download?id=' + response.data
       })

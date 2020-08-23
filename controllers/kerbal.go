@@ -83,10 +83,10 @@ func isNew(awsService *services.Service, id string) (bool, error) {
 	}
 	for _, obj := range kerbalObjs {
 		if getName(obj.Name) == id {
-			return true, nil
+			return false, nil
 		}
 	}
-	return false, nil
+	return true, nil
 }
 
 func getName(objName string) string {
@@ -166,12 +166,13 @@ func drawImage(ctx context.Context, images []image.Image, w io.Writer) error {
 func generateID(items KerbalItems) string {
 	hash := sha1.New()
 	name := ""
-	for folder, item := range items {
-		if item == "" {
+	for _, item := range availableItems {
+		if items[item] == "" {
 			continue
 		}
-		name += fmt.Sprintf("%s:%s", folder, item)
+		name += fmt.Sprintf("%s:%s", item, items[item])
 	}
+	hash.Write([]byte(name))
 	bytes := hash.Sum(nil)
 	return fmt.Sprintf("%x", bytes)
 }

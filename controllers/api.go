@@ -33,7 +33,7 @@ func NewItems(objects []*services.S3Object) Items {
 	for _, obj := range objects {
 		splitName := strings.Split(obj.Name, "/")
 		folder := splitName[0]
-		if folder == "kerbals" {
+		if folder == "kerbals" || folder == "client" {
 			continue
 		}
 		if obj.Size == 0 {

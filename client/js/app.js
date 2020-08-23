@@ -134,6 +134,7 @@ const activateButtons = () => {
       ...currentKerbal,
       'suit-front': removeKey(currentKerbal.suit, '.png') + frontKey + '.png',
     }
+    const errorMessage = 'Failed to create Kerbal, please try again'
     fetch(endpoints.kerbal, {
       method: 'post',
       body: JSON.stringify(body),
@@ -143,12 +144,15 @@ const activateButtons = () => {
     })
       .then(handleResponse)
       .then((response) => {
-        window.location.href = '/download?id=' + response.data
+        if (!response || !response.id) {
+          return Promise.reject(errorMessage)
+        }
+        window.location.href = '/download?id=' + response.id
       })
       .catch((response) => {
         save.removeClass('disabled')
         save.text('Save and Continue...')
-        const message = response.error || 'Failed to create Kerbal, please try again'
+        const message = response.error || errorMessage
         displayError(message)
       })
   })

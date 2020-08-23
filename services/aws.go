@@ -65,8 +65,8 @@ func (s *Service) AWSConnect() error {
 	if bucket == "" {
 		bucket = "kerbal.me"
 	}
-	awsID := os.Getenv("AWS_ACCESS_KEY_ID")
-	awsSecret := os.Getenv("AWS_SECRET_ACCESS_KEY")
+	awsID := os.Getenv("ACCESS_KEY_ID")
+	awsSecret := os.Getenv("SECRET_ACCESS_KEY")
 
 	var creds *credentials.Credentials
 	if awsID != "" && awsSecret != "" {

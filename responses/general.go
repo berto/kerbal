@@ -8,26 +8,28 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
+func newResponse(status int, body string) events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: status,
+		Headers: map[string]string{
+			"Content-Type":                     "application/json",
+			"Access-Control-Allow-Origin":      "*",
+			"Access-Control-Allow-Credentials": "true",
+			"Access-Control-Allow-Headers":     "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With",
+			"Access-Control-Allow-Methods":     "POST, OPTIONS, GET, PUT",
+		},
+		Body: body,
+	}
+}
+
 // ClientError sends client error
 func ClientError(err error) events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusBadRequest,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Body: fmt.Sprintf(`{"error":"%s"}`, err.Error()),
-	}
+	return newResponse(http.StatusBadRequest, fmt.Sprintf(`{"error":"%s"}`, err.Error()))
 }
 
 // ServerError sends server error
 func ServerError(err error) events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusInternalServerError,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Body: fmt.Sprintf(`{"error":"%s"}`, err.Error()),
-	}
+	return newResponse(http.StatusInternalServerError, fmt.Sprintf(`{"error":"%s"}`, err.Error()))
 }
 
 // OK sends data
@@ -36,15 +38,5 @@ func OK(data interface{}) events.APIGatewayProxyResponse {
 	if err != nil {
 		return ServerError(err)
 	}
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusOK,
-		Headers: map[string]string{
-			"Content-Type":                     "application/json",
-			"Access-Control-Allow-Origin":      "*",
-			"Access-Control-Allow-Credentials": "true",
-			"Access-Control-Allow-Headers":     "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With",
-			"Access-Control-Allow-Methods":     "POST, OPTIONS, GET, PUT",
-		},
-		Body: string(body),
-	}
+	return newResponse(http.StatusOK, string(body))
 }

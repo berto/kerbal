@@ -20,7 +20,8 @@ func GetItems(ctx context.Context) (Items, error) {
 	if err := awsService.AWSConnect(); err != nil {
 		return nil, errors.Wrap(err, "Failed to connect to aws: %s")
 	}
-	items, err := awsService.List(nil)
+	folder := "images"
+	items, err := awsService.List(&folder)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to list items: %s")
 	}
@@ -32,17 +33,17 @@ func NewItems(objects []*services.S3Object) Items {
 	items := map[string][]Item{}
 	for _, obj := range objects {
 		splitName := strings.Split(obj.Name, "/")
-		folder := splitName[0]
-		if folder == "kerbals" || folder == "client" {
+		if len(splitName) < 3 {
 			continue
 		}
+		folder := splitName[1]
 		if obj.Size == 0 {
 			if _, ok := items[obj.Name]; !ok {
 				items[folder] = []Item{}
 			}
 			continue
 		}
-		items[folder] = append(items[folder], Item(splitName[1]))
+		items[folder] = append(items[folder], Item(splitName[2]))
 	}
 	return items
 }

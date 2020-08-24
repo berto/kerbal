@@ -7,7 +7,7 @@ fi
 
 rm lambda.zip
 zip lambda.zip ./kerbal
-aws  --profile kerbal.me lambda e --function-name kerbal --zip-file fileb://lambda.zip
+aws --profile kerbal.me lambda update-function-code --function-name kerbal --zip-file fileb://lambda.zip
 
 rm lambda.zip   
 rm kerbal

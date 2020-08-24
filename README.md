@@ -26,19 +26,30 @@ The artwork is stored in a AWS S3 account for the app under the following folder
 
 ## Local Development
 
-The application connects to AWS S3 to load the images using the following envs:
+The application is broken down into:
+
+- Client: hosted on AWS S3 through AWS Cloudfront
+- Server: AWS Lambda available through AWS API Gateway
+- Images: AWS S3
+
+The server connects to AWS S3 to load the images using the following envs:
+
+```
+AWS_BUCKET=XXXXXXXXXX **defaults to kerbal.me**
+AWS_REGION=XXXXXXXXXX **defaults to us-west-2**
+```
+
+### Docker
+
+The website can be run as a standalone application under the `docker` branch. It requires AWS credentials to be set up. If `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` are not provided, it looks for shared credentials under the `AWS_PROFILE` name in `~/.aws/credentials`
 
 ```
 AWS_PROFILE=XXXXXXXXXX **defaults to kerbal.me**
-AWS_BUCKET=XXXXXXXXXX **defaults to kerbal.me**
-AWS_REGION=XXXXXXXXXX **defaults to us-west-2**
-AWS_ACCESS_KEY_ID=XXXXXXXXXX
-AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
 ```
 
-If `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` are not provided, it looks for shared credentials under the `AWS_PROFILE` name in `~/.aws/credentials`
-
 To run with docker:
+
+`git checkout docker`
 
 `docker build -t kerbal .`
 

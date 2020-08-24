@@ -58,9 +58,11 @@ const enableDownload = (url) => {
 }
 
 const titleRedirect = () => {
-  $('header h1').click(() => {
+  const goBack = () => {
     window.location.href = '/'
-  })
+  }
+  $('header h1').click(goBack)
+  $('#go-back').click(goBack)
 }
 
 const init = () => {

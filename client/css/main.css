@@ -86,3 +86,10 @@ header h1 {
   top: 5px;
   right: 5px;
 }
+.download-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+.download-buttons button {
+  margin-left: 10px;
+}

@@ -9,14 +9,15 @@ Kerbal.me is a fan-made website, it is in no way affiliated with the KSP team.
 The artwork is stored in a AWS S3 account for the app under the following folders:
 
 ```
-  /suit
-  /color
-  /eyes
-  /mouth
-  /hair
-  /facial-hair
-  /glasses
-  /extras
+  /images
+    /suit
+    /color
+    /eyes
+    /mouth
+    /hair
+    /facial-hair
+    /glasses
+    /extras
   /kerbals
 ```
 
@@ -26,7 +27,7 @@ The artwork is stored in a AWS S3 account for the app under the following folder
 
 ## Local Development
 
-The application is broken down into:
+The application uses Amazon Services:
 
 - Client: hosted on AWS S3 through AWS Cloudfront
 - Server: AWS Lambda available through AWS API Gateway

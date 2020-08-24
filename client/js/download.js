@@ -26,7 +26,7 @@ const displayAvatar = () => {
       displayError('Invalid id: ' + id)
     }
     const box = $('.download-avatar')
-    const url = `${awsURL}/kerbals/${id}.png`
+    const url = `${kerbalURL}/${id}.png`
     $(`<img src="${url}" />`)
       .on('load', function () {
         box.empty()
@@ -41,7 +41,7 @@ const displayAvatar = () => {
 
 const downloadImage = (url) => {
   const link = $('<a />')
-  link.attr('download', 'kerbal')
+  link.attr('download', 'kerbal.png')
   link.attr('href', url)
   link.attr('id', 'kerbal-link')
   $('body').append(link)

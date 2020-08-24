@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -53,10 +52,6 @@ func New(ctx context.Context) *Service {
 
 // AWSConnect establishes aws connection
 func (s *Service) AWSConnect() error {
-	profile := os.Getenv("AWS_PROFILE")
-	if profile == "" {
-		profile = "kerbal.me"
-	}
 	region := os.Getenv("AWS_REGION")
 	if region == "" {
 		region = "us-west-2"
@@ -65,16 +60,7 @@ func (s *Service) AWSConnect() error {
 	if bucket == "" {
 		bucket = "kerbal.me"
 	}
-	awsID := os.Getenv("AWS_ACCESS_KEY_ID")
-	awsSecret := os.Getenv("AWS_SECRET_ACCESS_KEY")
-
-	var creds *credentials.Credentials
-	if awsID != "" && awsSecret != "" {
-		creds = credentials.NewStaticCredentials(awsID, awsSecret, "")
-	} else {
-		creds = credentials.NewSharedCredentials("", profile)
-	}
-	conf := aws.NewConfig().WithCredentials(creds).WithRegion(region)
+	conf := aws.NewConfig().WithRegion(region)
 	sess, err := session.NewSession(conf)
 	if err != nil {
 		return err

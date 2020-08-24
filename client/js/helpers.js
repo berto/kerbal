@@ -1,9 +1,11 @@
-const awsURL = 'https://s3-us-west-2.amazonaws.com/kerbal.me'
-const serverURL = 'http://localhost:3000'
+const imagesURL = '/images'
+const kerbalURL = '/kerbals'
+const downloadURL = '/download.html'
+const serverURL = 'https://dq8r27wezj.execute-api.us-west-2.amazonaws.com/prod'
 
 const endpoints = {
-  items: `${serverURL}/api/items`,
-  kerbal: `${serverURL}/kerbal/`,
+  items: `${serverURL}`,
+  kerbal: `${serverURL}`,
 }
 const displayError = (error) => {
   const alertBox = $('.callout')
@@ -11,13 +13,11 @@ const displayError = (error) => {
   alertBox.fadeIn()
   $('#error-message').text(error)
   setTimeout(() => {
-    console.log('i')
     alertBox.fadeOut(1000)
   }, fadeOutTime)
 }
 
 const handleResponse = (response) => {
-  console.warn(response)
   if (response.status !== 200) {
     return Promise.reject(response.json())
   }

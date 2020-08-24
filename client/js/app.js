@@ -29,14 +29,14 @@ const updateKerbal = (folder, item) => {
   const box = $(`#kerbal-${folder}`)
   if (item) {
     item = removeKey(item, previewKey)
-    $(`<img src="${awsURL}/${folder}/${item}" />`).on('load', function () {
+    $(`<img src="${imagesURL}/${folder}/${item}" />`).on('load', function () {
       box.empty()
       box.append($(this))
     })
     if (folder === suitFolder) {
       const helmetFront = $('#kerbal-suit-front')
       item = removeKey(item, '.png')
-      $(`<img src="${awsURL}/${folder}/${item}${frontKey}.png" />`).on('load', function () {
+      $(`<img src="${imagesURL}/${folder}/${item}${frontKey}.png" />`).on('load', function () {
         helmetFront.empty()
         helmetFront.append($(this))
       })
@@ -68,7 +68,7 @@ const activateNoneCards = () => {
 const generateCard = (folder, item) => {
   const img = $('<img />')
   img.addClass('image-card')
-  img.attr('src', `${awsURL}/${folder}/${item}`)
+  img.attr('src', `${imagesURL}/${folder}/${item}`)
   img.attr('id', removeKey(item, previewKey))
   img.click(function () {
     if ($(this).hasClass('active')) return
@@ -134,6 +134,7 @@ const activateButtons = () => {
       ...currentKerbal,
       'suit-front': removeKey(currentKerbal.suit, '.png') + frontKey + '.png',
     }
+    const errorMessage = 'Failed to create Kerbal, please try again'
     fetch(endpoints.kerbal, {
       method: 'post',
       body: JSON.stringify(body),
@@ -143,12 +144,16 @@ const activateButtons = () => {
     })
       .then(handleResponse)
       .then((response) => {
-        window.location.href = '/download?id=' + response.data
+        console.log(response)
+        if (!response || !response.id) {
+          return Promise.reject(errorMessage)
+        }
+        window.location.href = `${downloadURL}?id=` + response.id
       })
       .catch((response) => {
         save.removeClass('disabled')
         save.text('Save and Continue...')
-        const message = response.error || 'Failed to create Kerbal, please try again'
+        const message = response.error || errorMessage
         displayError(message)
       })
   })

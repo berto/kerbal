@@ -1,66 +1,45 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"encoding/json"
 	"net/http"
-	"os"
 
-	"github.com/berto/kerbal/views"
-	"github.com/gin-gonic/gin"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/berto/kerbal/controllers"
+	"github.com/berto/kerbal/responses"
+	"github.com/pkg/errors"
 )
 
-const portENV = "PORT"
-const defaultPort = "3000"
-
-func createRouter() *gin.Engine {
-	router := gin.New()
-
-	{
-		router.Use(gin.Recovery())
-		router.Use(gin.Logger())
-		router.Use(corsMiddleware())
-		router.LoadHTMLGlob("./client/*.html")
-		router.Static("/js", "./client/js")
-		router.Static("/css", "./client/css")
-	}
-	{
-		router.GET("/", views.Home)
-		router.GET("/download", views.Download)
-		views.KerbalRoutes(router.Group("/kerbal"))
-		views.APIRoutes(router.Group("/api"))
-	}
-	return router
-}
-
-func getPort() string {
-	port := os.Getenv(portENV)
-	if port == "" {
-		return defaultPort
-	}
-	return port
-}
-
-func corsMiddleware() gin.HandlerFunc {
-	clientURL := os.Getenv("CLIENT_URL")
-	if clientURL == "" {
-		clientURL = "*"
-	}
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", clientURL)
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
+func handleLambda(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	switch request.HTTPMethod {
+	case http.MethodOptions:
+		return responses.OK("ok"), nil
+	case http.MethodGet:
+		items, err := controllers.GetItems(ctx)
+		if err != nil {
+			return responses.ServerError(err), nil
 		}
-
-		c.Next()
+		return responses.OK(items), nil
+	case http.MethodPost:
+		input := controllers.KerbalItems{}
+		if err := json.Unmarshal([]byte(request.Body), &input); err != nil {
+			return responses.ClientError(errors.Wrap(err, request.Body)), nil
+		}
+		if err := input.Validate(); err != nil {
+			return responses.ClientError(err), nil
+		}
+		id, err := controllers.CreateKerbal(ctx, input)
+		if err != nil {
+			return responses.ServerError(err), nil
+		}
+		return responses.OK(map[string]string{"id": id}), nil
+	default:
+		return responses.ClientError(errors.New("invalid method")), nil
 	}
 }
 
 func main() {
-	port := getPort()
-	createRouter().Run(fmt.Sprintf(":%s", port))
+	lambda.Start(handleLambda)
 }

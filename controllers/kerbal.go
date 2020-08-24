@@ -65,7 +65,7 @@ func CreateKerbal(ctx context.Context, items KerbalItems) (string, error) {
 	}
 	images, err := loadImages(awsService, items)
 	if err != nil {
-		return id, nil
+		return id, err
 	}
 	var kerbalBuf bytes.Buffer
 	if err := drawImage(ctx, images, &kerbalBuf); err != nil {
@@ -114,7 +114,7 @@ func loadImages(awsService *services.Service, items KerbalItems) ([]image.Image,
 			if folder == "suit-front" {
 				folder = "suit"
 			}
-			img, _, err := awsService.DownloadImages(fmt.Sprintf("/%s/%s", folder, items[item]))
+			img, _, err := awsService.DownloadImages(fmt.Sprintf("/images/%s/%s", folder, items[item]))
 			if err != nil {
 				mtx.Lock()
 				errs[item] = err

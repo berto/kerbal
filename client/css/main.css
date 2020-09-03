@@ -9,6 +9,7 @@
 body {
   margin-top: 10px;
   font-family: Exo2, sans-serif;
+  overflow-y: overlay;
 }
 header {
   display: flex;

@@ -26,10 +26,13 @@ header h1 {
 }
 #kerbal {
   position: relative;
-  width: 90%;
+  width: 95%;
 }
 .content {
   display: flex;
+  flex-wrap: wrap;
+  max-height: 300px;
+  overflow: auto;
 }
 .footer {
   color: #888;

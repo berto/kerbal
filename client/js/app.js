@@ -7,9 +7,9 @@ const frontKey = '-front'
 let currentKerbal = {}
 
 const initialItems = {
-  suit: 'helmet.png',
-  color: 'green.png',
-  mouth: 'smile.png',
+  suit: 'suit.png',
+  color: 'may-green.png',
+  mouth: 'wide-smile.png',
   hair: 'hair.png',
   eyes: 'eyes.png',
   'facial-hair': '',
